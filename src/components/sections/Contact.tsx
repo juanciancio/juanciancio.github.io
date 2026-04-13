@@ -42,7 +42,7 @@ export function Contact() {
           <AnimatedSection delay={0.3}>
             <div className="space-y-4 pt-4">
               {[
-                { href: 'mailto:juanciancio@gmail.com', icon: <Mail size={16} />, text: 'juanciancio@gmail.com' },
+                { href: 'mailto:juan.ciancio02@gmail.com', icon: <Mail size={16} />, text: 'juan.ciancio02@gmail.com' },
                 { href: 'https://github.com/juanciancio', icon: <GithubIcon size={16} />, text: 'github.com/juanciancio', external: true },
                 { href: 'https://linkedin.com/in/juanciancio', icon: <LinkedinIcon size={16} />, text: 'linkedin.com/in/juanciancio', external: true },
               ].map((link) => (

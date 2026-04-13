@@ -88,7 +88,7 @@ export function Hero() {
             {[
               { href: 'https://github.com/juanciancio', label: 'GitHub', icon: <GithubIcon size={18} /> },
               { href: 'https://linkedin.com/in/juanciancio', label: 'LinkedIn', icon: <LinkedinIcon size={18} /> },
-              { href: 'mailto:juanciancio@gmail.com', label: 'Email', icon: <Mail size={18} /> },
+              { href: 'mailto:juan.ciancio02@gmail.com', label: 'Email', icon: <Mail size={18} /> },
             ].map((link) => (
               <a
                 key={link.label}

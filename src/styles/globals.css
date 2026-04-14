@@ -94,6 +94,7 @@ body {
   background-color: var(--color-base);
   color: var(--color-text-primary);
   line-height: 1.6;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
   overflow-x: hidden;
   position: relative;
 }

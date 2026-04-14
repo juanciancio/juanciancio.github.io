@@ -13,22 +13,10 @@ export function Navbar() {
   const activeSection = useScrollSpy();
   const { t, locale, setLocale } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    let lastY = window.scrollY;
-    const handleScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 50);
-      // Hide on scroll down, show on scroll up (only after scrolling past hero)
-      if (y > 300) {
-        setHidden(y > lastY && y - lastY > 5);
-      } else {
-        setHidden(false);
-      }
-      lastY = y;
-    };
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -56,7 +44,8 @@ export function Navbar() {
           scrolled
             ? 'bg-base/80 backdrop-blur-md shadow-nav'
             : 'bg-transparent'
-        } ${hidden && !mobileOpen ? '-translate-y-full' : 'translate-y-0'}`}
+        }`}
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16">
           {/* Logo */}

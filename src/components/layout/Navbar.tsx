@@ -39,12 +39,19 @@ export function Navbar() {
 
   return (
     <>
-      <nav
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          scrolled
-            ? 'bg-base/80 backdrop-blur-md shadow-nav'
-            : 'bg-base'
-        }`}
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 9999,
+          backgroundColor: 'var(--color-base)',
+          backdropFilter: scrolled ? 'blur(12px)' : undefined,
+          boxShadow: scrolled ? 'var(--shadow-nav)' : undefined,
+          paddingTop: 'env(safe-area-inset-top, 0px)',
+          transition: 'all 0.3s',
+        }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16">
           {/* Logo */}
@@ -112,13 +119,13 @@ export function Navbar() {
             </button>
           </div>
         </div>
-      </nav>
+      </div>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            className="fixed inset-0 z-30 bg-base/95 backdrop-blur-md flex flex-col items-center justify-center gap-8"
+            className="fixed inset-0 z-[9998] bg-base/95 backdrop-blur-md flex flex-col items-center justify-center gap-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

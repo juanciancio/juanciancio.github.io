@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 type Theme = 'dark' | 'light';
 
 const THEME_COLORS: Record<Theme, string> = {
-  dark: '#0C0D10',
+  dark: '#1a1b1e',
   light: '#FAFAF9',
 };
 

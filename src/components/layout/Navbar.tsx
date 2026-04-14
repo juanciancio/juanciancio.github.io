@@ -43,9 +43,8 @@ export function Navbar() {
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
           scrolled
             ? 'bg-base/80 backdrop-blur-md shadow-nav'
-            : 'bg-transparent'
+            : 'bg-base'
         }`}
-        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16">
           {/* Logo */}

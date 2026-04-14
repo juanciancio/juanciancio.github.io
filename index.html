@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Juan Ciancio — Developer & AI Specialist</title>
     <meta name="description" content="Full-stack developer specializing in AI applications and automation. 6+ years of professional experience building intelligent systems." />
     <meta property="og:title" content="Juan Ciancio — Developer & AI Specialist" />
     <meta property="og:description" content="Full-stack developer specializing in AI applications and automation." />
     <meta property="og:type" content="website" />
-    <meta name="theme-color" content="#0C0D10" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#FAFAF9" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#1a1b1e" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -21,6 +20,8 @@
         var t = localStorage.getItem('theme') ||
           (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
         document.documentElement.setAttribute('data-theme', t);
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) meta.setAttribute('content', t === 'dark' ? '#0C0D10' : '#FAFAF9');
       })();
       // GitHub Pages SPA redirect handler
       (function() {

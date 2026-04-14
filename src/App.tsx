@@ -1,28 +1,21 @@
+import { BrowserRouter, Routes, Route } from 'react-router';
 import { LanguageProvider } from './i18n/LanguageContext';
-import { Navbar } from './components/layout/Navbar';
-import { Footer } from './components/layout/Footer';
-import { Hero } from './components/sections/Hero';
-import { About } from './components/sections/About';
-import { Projects } from './components/sections/Projects';
-import { Timeline } from './components/sections/Timeline';
-import { Services } from './components/sections/Services';
-import { Contact } from './components/sections/Contact';
+import { Home } from './pages/Home';
+import { ProjectDetail } from './pages/ProjectDetail';
+import { ScrollToTop } from './components/shared/ScrollToTop';
 
 function App() {
   return (
     <LanguageProvider>
-      <div className="min-h-screen bg-base text-text-primary">
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          <Projects />
-          <Timeline />
-          <Services />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
+      <BrowserRouter>
+        <ScrollToTop />
+        <div className="min-h-screen bg-base text-text-primary">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/project/:id" element={<ProjectDetail />} />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </LanguageProvider>
   );
 }

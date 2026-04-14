@@ -7,6 +7,7 @@ export interface Project {
   stack: string[];
   features: { es: string[]; en: string[] };
   image: string | null;
+  video: string | null;
   links: { demo: string | null; repo: string | null };
 }
 
@@ -42,6 +43,7 @@ export const projects: Project[] = [
       ],
     },
     image: null,
+    video: '/videos/barbershop-app.mp4',
     links: { demo: null, repo: null },
   },
   {
@@ -75,6 +77,7 @@ export const projects: Project[] = [
       ],
     },
     image: null,
+    video: null,
     links: { demo: null, repo: null },
   },
   {
@@ -108,6 +111,7 @@ export const projects: Project[] = [
       ],
     },
     image: null,
+    video: null,
     links: { demo: null, repo: null },
   },
 ];

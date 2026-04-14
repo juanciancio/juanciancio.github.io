@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, Layers } from 'lucide-react';
+import { ArrowUpRight, Layers, Play } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { Section } from '../layout/Section';
 import { Tag } from '../ui/Tag';
-import { Modal } from '../ui/Modal';
 import { AnimatedSection } from '../shared/AnimatedSection';
 import { projects, type Project } from '../../data/projects';
 
@@ -12,8 +12,8 @@ type Filter = 'all' | 'ai' | 'app';
 
 export function Projects() {
   const { t, locale } = useTranslation();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<Filter>('all');
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   const filtered =
     filter === 'all' ? projects : projects.filter((p) => p.category === filter);
@@ -57,18 +57,12 @@ export function Projects() {
                 project={project}
                 locale={locale}
                 label={t.projects.viewDetails}
-                onClick={() => setSelectedProject(project)}
+                onClick={() => navigate(`/project/${project.id}`)}
               />
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
-
-      <Modal isOpen={!!selectedProject} onClose={() => setSelectedProject(null)}>
-        {selectedProject && (
-          <ProjectDetail project={selectedProject} locale={locale} t={t.projects} />
-        )}
-      </Modal>
     </Section>
   );
 }
@@ -78,19 +72,57 @@ function ProjectCard({
 }: {
   project: Project; locale: 'es' | 'en'; label: string; onClick: () => void;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleMouseEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
   return (
     <motion.div
       className="group bg-surface-elevated border border-border rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:border-accent/30 hover:shadow-card-hover"
       whileHover={{ y: -4 }}
       onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       role="button"
       tabIndex={0}
       onKeyDown={(e: React.KeyboardEvent) => e.key === 'Enter' && onClick()}
     >
       <div className="aspect-[16/9] bg-base/50 flex items-center justify-center relative overflow-hidden">
-        <Layers size={28} className="text-text-muted" />
-        <div className="absolute inset-0 bg-accent/0 group-hover:bg-accent/5 transition-colors duration-300 flex items-center justify-center">
-          <span className="text-xs font-medium text-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1">
+        {project.video ? (
+          <>
+            <video
+              ref={videoRef}
+              src={project.video}
+              muted
+              playsInline
+              loop
+              preload="metadata"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Play hint icon — hides on hover when video plays */}
+            <div className="absolute inset-0 flex items-center justify-center bg-base/30 group-hover:bg-transparent transition-colors duration-300 pointer-events-none">
+              <div className="w-10 h-10 rounded-full bg-base/60 flex items-center justify-center group-hover:opacity-0 transition-opacity duration-300">
+                <Play size={16} className="text-text-primary ml-0.5" fill="currentColor" />
+              </div>
+            </div>
+          </>
+        ) : (
+          <Layers size={28} className="text-text-muted" />
+        )}
+        {/* Hover label */}
+        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-base/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <span className="text-xs font-medium text-accent flex items-center gap-1">
             {label} <ArrowUpRight size={14} />
           </span>
         </div>
@@ -112,47 +144,5 @@ function ProjectCard({
         </div>
       </div>
     </motion.div>
-  );
-}
-
-function ProjectDetail({
-  project, locale, t,
-}: {
-  project: Project; locale: 'es' | 'en'; t: { stack: string; features: string; close: string };
-}) {
-  return (
-    <div className="p-8 space-y-6">
-      <div className="space-y-2">
-        <span className="text-xs font-medium text-accent">
-          {project.category === 'ai' ? 'AI & Automation' : 'Application'}
-        </span>
-        <h3 className="font-heading text-2xl md:text-3xl font-bold text-text-primary">
-          {project.title[locale]}
-        </h3>
-      </div>
-
-      <p className="text-base text-text-secondary leading-relaxed">
-        {project.longDescription[locale]}
-      </p>
-
-      <div>
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-text-muted mb-3">{t.stack}</h4>
-        <div className="flex flex-wrap gap-2">
-          {project.stack.map((tech) => <Tag key={tech}>{tech}</Tag>)}
-        </div>
-      </div>
-
-      <div>
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-text-muted mb-3">{t.features}</h4>
-        <ul className="space-y-3">
-          {project.features[locale].map((feature, i) => (
-            <li key={i} className="text-sm text-text-secondary flex items-start gap-3">
-              <span className="text-accent mt-0.5 shrink-0">&mdash;</span>
-              {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
   );
 }

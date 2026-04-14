@@ -1,52 +1,68 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, Layers, Play, Smartphone } from 'lucide-react';
+import { ArrowUpRight, Layers, Play, Smartphone, Hand } from 'lucide-react';
 import { useTranslation } from '../../i18n/useTranslation';
 import { Section } from '../layout/Section';
-import { Tag } from '../ui/Tag';
 import { ImageCarousel } from '../ui/ImageCarousel';
 import { PhoneMockup } from '../ui/PhoneMockup';
 import { AnimatedSection } from '../shared/AnimatedSection';
 import { projects, type Project } from '../../data/projects';
 
-type Filter = 'all' | 'ai' | 'app';
-
 export function Projects() {
   const { t, locale } = useTranslation();
   const navigate = useNavigate();
-  const [filter, setFilter] = useState<Filter>('all');
+  const [showHint, setShowHint] = useState(false);
 
-  const filtered =
-    filter === 'all' ? projects : projects.filter((p) => p.category === filter);
+  useEffect(() => {
+    const isTouchDevice = 'ontouchstart' in window;
+    const dismissed = localStorage.getItem('longpress-hint-dismissed');
+    if (isTouchDevice && !dismissed) {
+      setShowHint(true);
+    }
+  }, []);
 
-  const filters: { key: Filter; label: string }[] = [
-    { key: 'all', label: t.projects.filterAll },
-    { key: 'ai', label: t.projects.filterAI },
-    { key: 'app', label: t.projects.filterApp },
-  ];
+  const dismissHint = () => {
+    setShowHint(false);
+    localStorage.setItem('longpress-hint-dismissed', '1');
+  };
 
   return (
     <Section id="projects" variant="surface">
       <AnimatedSection>
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-accent mb-2">
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-accent mb-10">
           {t.projects.title}
         </h2>
       </AnimatedSection>
 
-      <AnimatedSection delay={0.1}>
-        <div className="flex flex-wrap gap-2 mb-10">
-          {filters.map((f) => (
-            <Tag key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
-              {f.label}
-            </Tag>
-          ))}
-        </div>
-      </AnimatedSection>
+      {/* Long press hint — mobile only, shown once */}
+      <AnimatePresence>
+        {showHint && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="flex items-center gap-3 mb-6 px-4 py-3 bg-accent-muted border border-accent/20 rounded-lg"
+          >
+            <Hand size={18} className="text-accent shrink-0" />
+            <p className="text-xs text-text-secondary flex-1">
+              {locale === 'es'
+                ? 'Mantené presionado en un proyecto para ver el preview'
+                : 'Long press on a project to see the preview'}
+            </p>
+            <button
+              onClick={dismissHint}
+              className="text-text-muted hover:text-text-primary text-xs shrink-0"
+            >
+              ✕
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <AnimatePresence mode="popLayout">
-          {filtered.map((project, i) => (
+          {projects.map((project, i) => (
             <motion.div
               key={project.id}
               layout
@@ -60,6 +76,7 @@ export function Projects() {
                 locale={locale}
                 label={t.projects.viewDetails}
                 onClick={() => navigate(`/project/${project.id}`)}
+                onLongPressUsed={dismissHint}
               />
             </motion.div>
           ))}
@@ -70,12 +87,31 @@ export function Projects() {
 }
 
 function ProjectCard({
-  project, locale, label, onClick,
+  project, locale, label, onClick, onLongPressUsed,
 }: {
-  project: Project; locale: 'es' | 'en'; label: string; onClick: () => void;
+  project: Project; locale: 'es' | 'en'; label: string; onClick: () => void; onLongPressUsed?: () => void;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [hovering, setHovering] = useState(false);
+  const [pressing, setPressing] = useState(false);
+
+  const activateHover = () => {
+    setHovering(true);
+    setPressing(true);
+    onLongPressUsed?.();
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const deactivateHover = () => {
+    setHovering(false);
+    setPressing(false);
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    if (videoRef.current) videoRef.current.pause();
+  };
 
   const handleMouseEnter = () => {
     setHovering(true);
@@ -87,9 +123,25 @@ function ProjectCard({
 
   const handleMouseLeave = () => {
     setHovering(false);
-    if (videoRef.current) {
-      videoRef.current.pause();
+    if (videoRef.current) videoRef.current.pause();
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    longPressTimer.current = setTimeout(() => {
+      e.preventDefault();
+      activateHover();
+    }, 400);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+    if (pressing) {
+      deactivateHover();
     }
+  };
+
+  const handleTouchMove = () => {
+    if (longPressTimer.current) clearTimeout(longPressTimer.current);
   };
 
   const hasVideo = !!project.video;
@@ -110,8 +162,8 @@ function ProjectCard({
             poster={project.image || undefined}
             className="absolute inset-0 w-full h-full object-cover"
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-base/30 group-hover:bg-transparent transition-colors duration-300 pointer-events-none">
-            <div className="w-10 h-10 rounded-full bg-base/60 flex items-center justify-center group-hover:opacity-0 transition-opacity duration-300">
+          <div className={`absolute inset-0 flex items-center justify-center bg-base/30 group-hover:bg-transparent transition-all duration-300 pointer-events-none ${pressing ? 'bg-transparent' : ''}`}>
+            <div className={`w-10 h-10 rounded-full bg-base/60 flex items-center justify-center group-hover:opacity-0 transition-opacity duration-300 ${pressing ? 'opacity-0' : ''}`}>
               <Play size={16} className="text-text-primary ml-0.5" fill="currentColor" />
             </div>
           </div>
@@ -143,19 +195,27 @@ function ProjectCard({
 
   return (
     <motion.div
-      className="group bg-surface-elevated border border-border rounded-xl overflow-hidden cursor-pointer transition-all duration-300 hover:border-accent/30 hover:shadow-card-hover"
+      className={`group bg-surface-elevated border rounded-xl overflow-hidden cursor-pointer transition-all duration-300 select-none ${
+        pressing ? 'border-accent/30 shadow-card-hover scale-[0.98]' : 'border-border hover:border-accent/30 hover:shadow-card-hover'
+      }`}
       whileHover={{ y: -4 }}
-      onClick={onClick}
+      onClick={!pressing ? onClick : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+      onTouchMove={handleTouchMove}
       role="button"
       tabIndex={0}
       onKeyDown={(e: React.KeyboardEvent) => e.key === 'Enter' && onClick()}
+      style={{ WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
     >
       <div className="aspect-[16/9] bg-base/50 flex items-center justify-center relative overflow-hidden">
         {renderMedia()}
-        {/* Hover label */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-base/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+        {/* Hover / Long press label */}
+        <div className={`absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-base/80 to-transparent transition-opacity duration-300 pointer-events-none z-10 ${
+          pressing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+        }`}>
           <span className="text-xs font-medium text-accent flex items-center gap-1">
             {label} <ArrowUpRight size={14} />
           </span>

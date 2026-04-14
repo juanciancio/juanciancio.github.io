@@ -60,6 +60,7 @@ const en = {
     send: 'Send message',
     sending: 'Sending...',
     success: 'Message sent! I\'ll get back to you soon.',
+    error: 'There was an error sending the message. Please try again.',
     namePlaceholder: 'Your name',
     emailPlaceholder: 'you@email.com',
     messagePlaceholder: 'Tell me about your project...',

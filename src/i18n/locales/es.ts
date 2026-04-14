@@ -60,6 +60,7 @@ const es = {
     send: 'Enviar mensaje',
     sending: 'Enviando...',
     success: '¡Mensaje enviado! Te respondo pronto.',
+    error: 'Hubo un error al enviar el mensaje. Intentá de nuevo.',
     namePlaceholder: 'Tu nombre',
     emailPlaceholder: 'tu@email.com',
     messagePlaceholder: 'Contame sobre tu proyecto...',

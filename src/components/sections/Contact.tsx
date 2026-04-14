@@ -1,20 +1,45 @@
-import { useState, type FormEvent } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Mail, Send } from 'lucide-react';
+import { useState, useRef, type FormEvent } from 'react';
+import { Mail, Send, Loader2 } from 'lucide-react';
+import emailjs from '@emailjs/browser';
 import { GithubIcon, LinkedinIcon } from '../ui/SocialIcons';
 import { useTranslation } from '../../i18n/useTranslation';
+import { useToast } from '../../hooks/useToast';
 import { Section } from '../layout/Section';
 import { AnimatedSection } from '../shared/AnimatedSection';
 import { Button } from '../ui/Button';
 
+// EmailJS config — these are public keys, safe to expose
+// TODO: Replace with your EmailJS credentials
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+
 export function Contact() {
   const { t } = useTranslation();
-  const [submitted, setSubmitted] = useState(false);
+  const { showToast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 5000);
+    if (!formRef.current || sending) return;
+
+    setSending(true);
+
+    try {
+      await emailjs.sendForm(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        formRef.current,
+        EMAILJS_PUBLIC_KEY,
+      );
+      showToast(t.contact.success, 'success');
+      formRef.current.reset();
+    } catch {
+      showToast(t.contact.error, 'error');
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -62,24 +87,34 @@ export function Contact() {
         </div>
 
         <AnimatedSection delay={0.2}>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {[
-              { id: 'name', label: t.contact.name, type: 'text', placeholder: t.contact.namePlaceholder },
-              { id: 'email', label: t.contact.email, type: 'email', placeholder: t.contact.emailPlaceholder },
-            ].map((field) => (
-              <div key={field.id}>
-                <label htmlFor={field.id} className="text-[11px] font-medium uppercase tracking-wide text-text-muted block mb-2">
-                  {field.label}
-                </label>
-                <input
-                  id={field.id}
-                  type={field.type}
-                  required
-                  placeholder={field.placeholder}
-                  className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-sm text-text-primary outline-none transition-all focus:border-accent focus:ring-1 focus:ring-accent/30 placeholder:text-text-muted"
-                />
-              </div>
-            ))}
+          <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+            <div>
+              <label htmlFor="from_name" className="text-[11px] font-medium uppercase tracking-wide text-text-muted block mb-2">
+                {t.contact.name}
+              </label>
+              <input
+                id="from_name"
+                name="from_name"
+                type="text"
+                required
+                placeholder={t.contact.namePlaceholder}
+                className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-sm text-text-primary outline-none transition-all focus:border-accent focus:ring-1 focus:ring-accent/30 placeholder:text-text-muted"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="from_email" className="text-[11px] font-medium uppercase tracking-wide text-text-muted block mb-2">
+                {t.contact.email}
+              </label>
+              <input
+                id="from_email"
+                name="from_email"
+                type="email"
+                required
+                placeholder={t.contact.emailPlaceholder}
+                className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-sm text-text-primary outline-none transition-all focus:border-accent focus:ring-1 focus:ring-accent/30 placeholder:text-text-muted"
+              />
+            </div>
 
             <div>
               <label htmlFor="message" className="text-[11px] font-medium uppercase tracking-wide text-text-muted block mb-2">
@@ -87,6 +122,7 @@ export function Contact() {
               </label>
               <textarea
                 id="message"
+                name="message"
                 required
                 rows={5}
                 placeholder={t.contact.messagePlaceholder}
@@ -94,24 +130,14 @@ export function Contact() {
               />
             </div>
 
-            <div className="relative">
-              <Button type="submit">
+            <Button type="submit" className={sending ? 'opacity-70 pointer-events-none' : ''}>
+              {sending ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
                 <Send size={14} />
-                {t.contact.send}
-              </Button>
-              <AnimatePresence>
-                {submitted && (
-                  <motion.p
-                    className="absolute top-full mt-3 text-xs text-accent font-medium"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                  >
-                    {t.contact.success}
-                  </motion.p>
-                )}
-              </AnimatePresence>
-            </div>
+              )}
+              {sending ? t.contact.sending : t.contact.send}
+            </Button>
           </form>
         </AnimatedSection>
       </div>

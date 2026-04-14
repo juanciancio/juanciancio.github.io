@@ -45,8 +45,9 @@ export function Navbar() {
             ? 'bg-base/80 backdrop-blur-md shadow-nav'
             : 'bg-transparent'
         }`}
+        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+        <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16">
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

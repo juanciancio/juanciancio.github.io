@@ -42,7 +42,7 @@ export const projects: Project[] = [
         'Local database \u2014 works without internet',
       ],
     },
-    image: null,
+    image: '/images/barbershop-app-thumb.jpg',
     video: '/videos/barbershop-app.mp4',
     links: { demo: null, repo: null },
   },

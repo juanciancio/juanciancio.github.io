@@ -101,6 +101,14 @@ function ProjectCard({
       <div className="aspect-[16/9] bg-base/50 flex items-center justify-center relative overflow-hidden">
         {project.video ? (
           <>
+            {/* Poster image — always visible, ensures mobile shows preview */}
+            {project.image && (
+              <img
+                src={project.image}
+                alt={project.title[locale]}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            )}
             <video
               ref={videoRef}
               src={project.video}
@@ -108,6 +116,7 @@ function ProjectCard({
               playsInline
               loop
               preload="metadata"
+              poster={project.image || undefined}
               className="absolute inset-0 w-full h-full object-cover"
             />
             {/* Play hint icon — hides on hover when video plays */}

@@ -6,6 +6,7 @@ import { projects } from '../data/projects';
 import { Tag } from '../components/ui/Tag';
 import { Button } from '../components/ui/Button';
 import { ImageCarousel } from '../components/ui/ImageCarousel';
+import { AppleIcon, PlayStoreIcon } from '../components/ui/SocialIcons';
 import { PhoneMockup } from '../components/ui/PhoneMockup';
 
 export function ProjectDetail() {
@@ -150,13 +151,23 @@ export function ProjectDetail() {
           </motion.div>
 
           {/* Links */}
-          {(project.links.demo || project.links.repo) && (
+          {(project.links.demo || project.links.repo || project.links.appStore || project.links.playStore) && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.35 }}
-              className="flex gap-4 pt-4"
+              className="flex flex-wrap gap-4 pt-4"
             >
+              {project.links.appStore && (
+                <Button href={project.links.appStore}>
+                  <AppleIcon size={16} /> App Store
+                </Button>
+              )}
+              {project.links.playStore && (
+                <Button href={project.links.playStore}>
+                  <PlayStoreIcon size={16} /> Google Play
+                </Button>
+              )}
               {project.links.demo && (
                 <Button href={project.links.demo}>
                   Demo <ArrowUpRight size={14} />

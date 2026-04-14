@@ -10,7 +10,7 @@ export interface Project {
   images: string[];
   video: string | null;
   displayType?: 'desktop' | 'mobile';
-  links: { demo: string | null; repo: string | null };
+  links: { demo: string | null; repo: string | null; appStore: string | null; playStore: string | null };
 }
 
 export const projects: Project[] = [
@@ -48,7 +48,7 @@ export const projects: Project[] = [
     images: [],
     video: '/videos/barbershop-app.mp4',
     displayType: 'desktop',
-    links: { demo: null, repo: null },
+    links: { demo: null, repo: null, appStore: null, playStore: null },
   },
   {
     id: 'racing-club',
@@ -90,7 +90,7 @@ export const projects: Project[] = [
     ],
     video: null,
     displayType: 'mobile',
-    links: { demo: null, repo: null },
+    links: { demo: null, repo: null, appStore: 'https://apps.apple.com/ar/app/racing-club-olavarria/id6745906037', playStore: null },
   },
   {
     id: 'trading-bot',
@@ -125,7 +125,7 @@ export const projects: Project[] = [
     image: null,
     images: [],
     video: null,
-    links: { demo: null, repo: null },
+    links: { demo: null, repo: null, appStore: null, playStore: null },
   },
   {
     id: 'sports-analytics',
@@ -160,6 +160,6 @@ export const projects: Project[] = [
     image: null,
     images: [],
     video: null,
-    links: { demo: null, repo: null },
+    links: { demo: null, repo: null, appStore: null, playStore: null },
   },
 ];

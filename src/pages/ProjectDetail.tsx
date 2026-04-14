@@ -5,6 +5,8 @@ import { useTranslation } from '../i18n/useTranslation';
 import { projects } from '../data/projects';
 import { Tag } from '../components/ui/Tag';
 import { Button } from '../components/ui/Button';
+import { ImageCarousel } from '../components/ui/ImageCarousel';
+import { PhoneMockup } from '../components/ui/PhoneMockup';
 
 export function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +25,10 @@ export function ProjectDetail() {
       </div>
     );
   }
+
+  const hasVideo = !!project.video;
+  const hasImages = project.images.length > 0;
+  const isMobile = project.displayType === 'mobile';
 
   return (
     <div className="min-h-screen bg-base">
@@ -59,8 +65,8 @@ export function ProjectDetail() {
             </p>
           </div>
 
-          {/* Video / Image */}
-          {project.video && (
+          {/* Media: Video */}
+          {hasVideo && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -68,7 +74,7 @@ export function ProjectDetail() {
               className="rounded-xl overflow-hidden border border-border bg-surface"
             >
               <video
-                src={project.video}
+                src={project.video!}
                 controls
                 playsInline
                 className="w-full"
@@ -79,6 +85,37 @@ export function ProjectDetail() {
             </motion.div>
           )}
 
+          {/* Media: Image Carousel */}
+          {!hasVideo && hasImages && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+            >
+              {isMobile ? (
+                <PhoneMockup className="py-4">
+                  <ImageCarousel
+                    images={project.images}
+                    autoPlay
+                    interval={3000}
+                    showControls
+                    alt={project.title[locale]}
+                  />
+                </PhoneMockup>
+              ) : (
+                <div className="rounded-xl overflow-hidden border border-border bg-surface group">
+                  <div className="aspect-[16/9] relative">
+                    <ImageCarousel
+                      images={project.images}
+                      showControls
+                      alt={project.title[locale]}
+                    />
+                  </div>
+                </div>
+              )}
+            </motion.div>
+          )}
+
           {/* Stack & Features Grid */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -86,7 +123,6 @@ export function ProjectDetail() {
             transition={{ duration: 0.5, delay: 0.25 }}
             className="grid grid-cols-1 md:grid-cols-2 gap-12"
           >
-            {/* Stack */}
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-wide text-text-muted mb-4">
                 {t.projects.stack}
@@ -98,7 +134,6 @@ export function ProjectDetail() {
               </div>
             </div>
 
-            {/* Features */}
             <div>
               <h2 className="text-xs font-semibold uppercase tracking-wide text-text-muted mb-4">
                 {t.projects.features}

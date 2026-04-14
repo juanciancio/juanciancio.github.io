@@ -15,20 +15,22 @@ export const services: Service[] = [
       en: 'Custom Application Development',
     },
     description: {
-      es: 'Apps desktop y web con arquitectura sólida, diseñadas para resolver problemas específicos de tu negocio.',
-      en: 'Desktop and web apps with solid architecture, designed to solve your specific business problems.',
+      es: 'Apps web, mobile y desktop con arquitectura sólida, diseñadas para resolver problemas específicos de tu negocio.',
+      en: 'Web, mobile, and desktop apps with solid architecture, designed to solve your specific business problems.',
     },
     features: {
       es: [
-        'Aplicaciones desktop nativas con Tauri',
+        'Aplicaciones mobile con Flutter y React Native',
+        'Progressive Web Apps (PWA)',
         'Plataformas web full-stack',
-        'Interfaces intuitivas y performantes',
+        'Aplicaciones desktop con Tauri',
         'Bases de datos optimizadas para tu caso de uso',
       ],
       en: [
-        'Native desktop applications with Tauri',
+        'Mobile applications with Flutter and React Native',
+        'Progressive Web Apps (PWA)',
         'Full-stack web platforms',
-        'Intuitive and performant interfaces',
+        'Desktop applications with Tauri',
         'Databases optimized for your use case',
       ],
     },

@@ -4,7 +4,7 @@ import { Tag } from '../ui/Tag';
 import { AnimatedSection } from '../shared/AnimatedSection';
 
 const SKILLS = {
-  frontend: ['React', 'React Native', 'Angular', 'Next.js', 'Astro', 'Tailwind CSS'],
+  frontend: ['React', 'React Native', 'Flutter', 'Angular', 'Next.js', 'Astro', 'Tailwind CSS'],
   backend: ['Node.js', 'Java', 'Spring Boot', 'Rust', 'Python'],
   databases: ['PostgreSQL', 'MySQL', 'SQL Server', 'SQLite'],
   testing: ['JUnit', 'Jest'],

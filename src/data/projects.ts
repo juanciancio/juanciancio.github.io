@@ -7,7 +7,9 @@ export interface Project {
   stack: string[];
   features: { es: string[]; en: string[] };
   image: string | null;
+  images: string[];
   video: string | null;
+  displayType?: 'desktop' | 'mobile';
   links: { demo: string | null; repo: string | null };
 }
 
@@ -43,7 +45,51 @@ export const projects: Project[] = [
       ],
     },
     image: '/images/barbershop-app-thumb.jpg',
+    images: [],
     video: '/videos/barbershop-app.mp4',
+    displayType: 'desktop',
+    links: { demo: null, repo: null },
+  },
+  {
+    id: 'racing-club',
+    title: {
+      es: 'Racing Club de Olavarr\u00eda',
+      en: 'Racing Club de Olavarr\u00eda',
+    },
+    category: 'app',
+    description: {
+      es: 'Aplicaci\u00f3n mobile para un club deportivo: beneficios, noticias, pago de cuotas y carnet digital.',
+      en: 'Mobile app for a sports club: benefits, news, fee payments, and digital membership card.',
+    },
+    longDescription: {
+      es: 'Una aplicaci\u00f3n mobile desarrollada para Racing Club de Olavarr\u00eda que centraliza toda la experiencia del socio. Permite acceder a beneficios exclusivos, leer noticias del club, pagar cuotas pendientes y llevar el carnet de socio en formato digital.',
+      en: 'A mobile application developed for Racing Club de Olavarr\u00eda that centralizes the entire member experience. Allows access to exclusive benefits, reading club news, paying pending fees, and carrying a digital membership card.',
+    },
+    stack: ['React Native', 'Node.js', 'TypeScript'],
+    features: {
+      es: [
+        'Beneficios exclusivos para socios',
+        'Noticias y novedades del club',
+        'Pago de cuotas pendientes',
+        'Carnet digital de socio',
+      ],
+      en: [
+        'Exclusive member benefits',
+        'Club news and updates',
+        'Pending fee payments',
+        'Digital membership card',
+      ],
+    },
+    image: '/images/racing-club/home.jpeg',
+    images: [
+      '/images/racing-club/home.jpeg',
+      '/images/racing-club/beneficios.jpeg',
+      '/images/racing-club/noticias.jpeg',
+      '/images/racing-club/pagos.jpeg',
+      '/images/racing-club/carnet.jpeg',
+    ],
+    video: null,
+    displayType: 'mobile',
     links: { demo: null, repo: null },
   },
   {
@@ -77,6 +123,7 @@ export const projects: Project[] = [
       ],
     },
     image: null,
+    images: [],
     video: null,
     links: { demo: null, repo: null },
   },
@@ -111,6 +158,7 @@ export const projects: Project[] = [
       ],
     },
     image: null,
+    images: [],
     video: null,
     links: { demo: null, repo: null },
   },

@@ -31,7 +31,7 @@ export function Hero() {
   const { t } = useTranslation();
 
   return (
-    <section className="min-h-[90vh] flex items-center px-6 md:px-12 lg:px-24 pt-20 pb-12">
+    <section className="min-h-[90vh] flex items-center px-6 md:px-12 lg:px-24 pt-16 pb-12">
       <div className="max-w-5xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
         {/* Text Content */}
         <div className="space-y-7">

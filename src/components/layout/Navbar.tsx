@@ -57,7 +57,6 @@ export function Navbar() {
             ? 'bg-base/80 backdrop-blur-md shadow-nav'
             : 'bg-transparent'
         } ${hidden && !mobileOpen ? '-translate-y-full' : 'translate-y-0'}`}
-        style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16">
           {/* Logo */}

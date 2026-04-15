@@ -5,6 +5,7 @@ import { useTheme } from '../../hooks/useTheme';
 import { useScrollSpy } from '../../hooks/useScrollSpy';
 import { useTranslation } from '../../i18n/useTranslation';
 import type { Locale } from '../../i18n/LanguageContext';
+import { Logo } from '../shared/Logo';
 
 const NAV_ITEMS = ['about', 'projects', 'experience', 'services', 'contact'] as const;
 
@@ -57,10 +58,10 @@ export function Navbar() {
           {/* Logo */}
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="font-heading text-base font-bold tracking-tight hover:opacity-80 transition-opacity"
+            className="flex items-center hover:opacity-80 transition-opacity"
+            aria-label="Scroll to top"
           >
-            <span className="text-text-primary">JC</span>
-            <span className="text-accent">_</span>
+            <Logo size={44} />
           </button>
 
           {/* Desktop Nav */}

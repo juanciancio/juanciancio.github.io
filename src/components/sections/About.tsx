@@ -29,7 +29,6 @@ export function About() {
 
   const metrics = [
     { value: 6, suffix: '+', label: t.about.metrics.years },
-    { value: 20, suffix: '+', label: t.about.metrics.projects },
     { value: 25, suffix: '+', label: t.about.metrics.techs },
   ];
 
@@ -57,7 +56,7 @@ export function About() {
 
           {/* Metrics */}
           <AnimateOnScroll delay={0.4}>
-            <div className="grid grid-cols-3 gap-4 pt-6 border-t border-border/60">
+            <div className="grid grid-cols-2 gap-4 pt-6 border-t border-border/60">
               {metrics.map((m) => (
                 <div key={m.label}>
                   <div className="font-heading text-2xl md:text-3xl font-bold text-accent">

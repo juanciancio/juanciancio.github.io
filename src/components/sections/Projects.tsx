@@ -1,13 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowUpRight, Layers, Play, Smartphone, Hand } from 'lucide-react';
+import { ArrowUpRight, Layers, Play, Smartphone, Hand, ExternalLink } from 'lucide-react';
+import { AppleIcon, PlayStoreIcon, GithubIcon } from '../ui/SocialIcons';
 import { useTranslation } from '../../i18n/useTranslation';
 import { Section } from '../layout/Section';
 import { ImageCarousel } from '../ui/ImageCarousel';
 import { PhoneMockup } from '../ui/PhoneMockup';
-import { AnimatedSection } from '../shared/AnimatedSection';
+import { SectionHeader } from '../shared/SectionHeader';
 import { projects, type Project } from '../../data/projects';
+
+const CATEGORY_LABEL: Record<Project['category'], { es: string; en: string; color: string }> = {
+  ai: { es: 'AI & Automation', en: 'AI & Automation', color: 'bg-accent-warm-muted text-accent-warm border-accent-warm/30' },
+  app: { es: 'Aplicación', en: 'Application', color: 'bg-accent-muted text-accent border-accent/30' },
+};
 
 export function Projects() {
   const { t, locale } = useTranslation();
@@ -29,13 +35,9 @@ export function Projects() {
 
   return (
     <Section id="projects" variant="surface">
-      <AnimatedSection>
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-accent mb-10">
-          {t.projects.title}
-        </h2>
-      </AnimatedSection>
+      <SectionHeader title={t.projects.title} />
 
-      {/* Long press hint — mobile only, shown once */}
+      {/* Long press hint — mobile only */}
       <AnimatePresence>
         {showHint && (
           <motion.div
@@ -66,10 +68,11 @@ export function Projects() {
             <motion.div
               key={project.id}
               layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 24, scale: 0.96 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.4, delay: i * 0.1 }}
+              transition={{ duration: 0.5, delay: i * 0.1, ease: [0.25, 0.1, 0.25, 1] }}
             >
               <ProjectCard
                 project={project}
@@ -147,6 +150,13 @@ function ProjectCard({
   const hasVideo = !!project.video;
   const hasImages = project.images.length > 0;
   const isMobile = project.displayType === 'mobile';
+  const catMeta = CATEGORY_LABEL[project.category];
+
+  const hasExternalLinks = !!(
+    project.links.repo || project.links.demo || project.links.appStore || project.links.playStore
+  );
+
+  const stopPropagation = (e: React.MouseEvent) => e.stopPropagation();
 
   const renderMedia = () => {
     if (hasVideo) {
@@ -186,7 +196,6 @@ function ProjectCard({
       );
     }
 
-    // Placeholder
     if (isMobile) {
       return <Smartphone size={28} className="text-text-muted" />;
     }
@@ -195,10 +204,13 @@ function ProjectCard({
 
   return (
     <motion.div
-      className={`group bg-surface-elevated border rounded-xl overflow-hidden cursor-pointer transition-all duration-300 select-none ${
-        pressing ? 'border-accent/30 shadow-card-hover scale-[0.98]' : 'border-border hover:border-accent/30 hover:shadow-card-hover'
+      className={`group relative bg-surface-elevated border rounded-xl overflow-hidden cursor-pointer transition-all duration-300 select-none ${
+        pressing
+          ? 'border-accent/40 shadow-[0_8px_30px_rgba(45,212,191,0.2)] scale-[0.98]'
+          : 'border-border hover:border-accent/40 hover:shadow-[0_10px_30px_rgba(45,212,191,0.12)]'
       }`}
-      whileHover={{ y: -4 }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
       onClick={!pressing ? onClick : undefined}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -210,22 +222,91 @@ function ProjectCard({
       onKeyDown={(e: React.KeyboardEvent) => e.key === 'Enter' && onClick()}
       style={{ WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
     >
+      {/* Category badge */}
+      <div className="absolute top-3 left-3 z-20">
+        <span className={`inline-flex items-center px-2.5 py-1 text-[10px] font-semibold tracking-wide uppercase rounded-md border backdrop-blur-sm ${catMeta.color}`}>
+          {catMeta[locale]}
+        </span>
+      </div>
+
       <div className="aspect-[16/9] bg-base/50 flex items-center justify-center relative overflow-hidden">
         {renderMedia()}
-        {/* Hover / Long press label */}
+        {/* Hover overlay label */}
         <div className={`absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-base/80 to-transparent transition-opacity duration-300 pointer-events-none z-10 ${
           pressing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
         }`}>
           <span className="text-xs font-medium text-accent flex items-center gap-1">
-            {label} <ArrowUpRight size={14} />
+            {label}{' '}
+            <motion.span
+              className="inline-flex"
+              animate={{ x: [0, 3, 0] }}
+              transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <ArrowUpRight size={14} />
+            </motion.span>
           </span>
         </div>
       </div>
 
       <div className="p-6 space-y-3">
-        <h3 className="font-heading text-lg font-semibold text-text-primary">
-          {project.title[locale]}
-        </h3>
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-heading text-lg font-semibold text-text-primary group-hover:text-accent transition-colors">
+            {project.title[locale]}
+          </h3>
+          {hasExternalLinks && (
+            <div className="flex items-center gap-2 shrink-0 mt-1">
+              {project.links.repo && (
+                <a
+                  href={project.links.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={stopPropagation}
+                  aria-label="GitHub repo"
+                  className="text-text-muted hover:text-accent transition-colors"
+                >
+                  <GithubIcon size={15} />
+                </a>
+              )}
+              {project.links.demo && (
+                <a
+                  href={project.links.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={stopPropagation}
+                  aria-label="Live demo"
+                  className="text-text-muted hover:text-accent transition-colors"
+                >
+                  <ExternalLink size={15} />
+                </a>
+              )}
+              {project.links.appStore && (
+                <a
+                  href={project.links.appStore}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={stopPropagation}
+                  aria-label="App Store"
+                  className="text-text-muted hover:text-accent transition-colors"
+                >
+                  <AppleIcon size={15} />
+                </a>
+              )}
+              {project.links.playStore && (
+                <a
+                  href={project.links.playStore}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={stopPropagation}
+                  aria-label="Play Store"
+                  className="text-text-muted hover:text-accent transition-colors"
+                >
+                  <PlayStoreIcon size={15} />
+                </a>
+              )}
+            </div>
+          )}
+        </div>
+
         <p className="text-sm text-text-secondary leading-relaxed line-clamp-2">
           {project.description[locale]}
         </p>

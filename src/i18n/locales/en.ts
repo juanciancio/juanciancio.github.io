@@ -17,9 +17,9 @@ const en = {
   },
   about: {
     title: 'About',
-    bio: 'Full Stack Developer with 6+ years of experience building web and mobile applications. Specialized in React and Node.js, with solid experience in Java and Spring Boot.',
-    bio2: "I've worked on high-traffic products, third-party API integrations, payment gateways, and agile environments — prioritizing quality, scalability, and best practices. Currently working independently specializing in AI and automation.",
-    bio3: 'Based in Argentina, I work with clients across LATAM and with timezone overlap with the United States.',
+    bio: 'I started programming enterprise systems with Java and Angular. Over time I evolved toward modern full-stack development with React and Node.js, building high-traffic products and working with third-party APIs and payment gateways.',
+    bio2: 'Today I design and build intelligent systems where AI works autonomously — from trading bots to analytics pipelines and agents that automate complex processes.',
+    bio3: 'I work independently from Argentina with clients across LATAM and timezone overlap with the United States.',
     skillsTitle: 'Tech Stack',
     categories: {
       web: 'Frontend',
@@ -28,6 +28,11 @@ const en = {
       testing: 'Testing',
       infra: 'Infra & Tools',
       aiml: 'AI & ML',
+    },
+    metrics: {
+      years: 'Years of experience',
+      projects: 'Projects delivered',
+      techs: 'Technologies mastered',
     },
   },
   projects: {

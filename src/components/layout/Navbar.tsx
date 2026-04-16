@@ -56,36 +56,49 @@ export function Navbar() {
       >
         <div className="max-w-6xl mx-auto flex items-center justify-between px-6 md:px-12 lg:px-24 h-16">
           {/* Logo */}
-          <button
+          <motion.button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center hover:opacity-80 transition-opacity"
+            className="flex items-center"
             aria-label="Scroll to top"
+            whileHover={{ scale: 1.08, rotate: -4 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ duration: 0.2 }}
           >
             <Logo size={44} />
-          </button>
+          </motion.button>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item}
-                onClick={() => scrollTo(item)}
-                className={`relative text-sm font-medium transition-colors duration-200 ${
-                  activeSection === item
-                    ? 'text-accent'
-                    : 'text-text-secondary hover:text-text-primary'
-                }`}
-              >
-                {navLabels[item]}
-                {activeSection === item && (
-                  <motion.div
-                    layoutId="nav-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-[2px] bg-accent"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeSection === item;
+              return (
+                <button
+                  key={item}
+                  onClick={() => scrollTo(item)}
+                  className={`relative group text-sm font-medium transition-colors duration-200 ${
+                    isActive
+                      ? 'text-accent'
+                      : 'text-text-secondary hover:text-text-primary'
+                  }`}
+                >
+                  {navLabels[item]}
+                  {isActive && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute -bottom-1 left-0 right-0 h-[2px] bg-accent"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                  {/* Hover underline, only when not active */}
+                  {!isActive && (
+                    <span
+                      aria-hidden
+                      className="absolute -bottom-1 left-0 h-[2px] bg-accent/60 w-0 group-hover:w-full transition-all duration-300 ease-out"
+                    />
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {/* Controls */}

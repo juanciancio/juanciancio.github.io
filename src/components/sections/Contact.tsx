@@ -5,7 +5,8 @@ import { GithubIcon, LinkedinIcon } from '../ui/SocialIcons';
 import { useTranslation } from '../../i18n/useTranslation';
 import { useToast } from '../../hooks/useToast';
 import { Section } from '../layout/Section';
-import { AnimatedSection } from '../shared/AnimatedSection';
+import { AnimateOnScroll } from '../shared/AnimateOnScroll';
+import { SectionHeader } from '../shared/SectionHeader';
 import { Button } from '../ui/Button';
 
 // EmailJS config — these are public keys, safe to expose
@@ -44,27 +45,23 @@ export function Contact() {
 
   return (
     <Section id="contact">
-      <AnimatedSection>
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-accent mb-10">
-          {t.contact.title}
-        </h2>
-      </AnimatedSection>
+      <SectionHeader title={t.contact.title} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
         <div className="space-y-6">
-          <AnimatedSection delay={0.1}>
+          <AnimateOnScroll delay={0.1}>
             <h3 className="font-heading text-2xl md:text-3xl font-bold text-text-primary leading-snug">
               {t.contact.subtitle}
             </h3>
-          </AnimatedSection>
+          </AnimateOnScroll>
 
-          <AnimatedSection delay={0.2}>
+          <AnimateOnScroll delay={0.2}>
             <p className="text-sm text-text-secondary leading-relaxed max-w-md">
               {t.contact.description}
             </p>
-          </AnimatedSection>
+          </AnimateOnScroll>
 
-          <AnimatedSection delay={0.3}>
+          <AnimateOnScroll delay={0.3}>
             <div className="space-y-4 pt-4">
               {[
                 { href: 'mailto:juan.ciancio02@gmail.com', icon: <Mail size={16} />, text: 'juan.ciancio02@gmail.com' },
@@ -83,10 +80,10 @@ export function Contact() {
                 </a>
               ))}
             </div>
-          </AnimatedSection>
+          </AnimateOnScroll>
         </div>
 
-        <AnimatedSection delay={0.2}>
+        <AnimateOnScroll delay={0.2}>
           <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="from_name" className="text-[11px] font-medium uppercase tracking-wide text-text-muted block mb-2">
@@ -139,7 +136,7 @@ export function Contact() {
               {sending ? t.contact.sending : t.contact.send}
             </Button>
           </form>
-        </AnimatedSection>
+        </AnimateOnScroll>
       </div>
     </Section>
   );

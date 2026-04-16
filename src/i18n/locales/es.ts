@@ -17,9 +17,9 @@ const es = {
   },
   about: {
     title: 'Sobre Mí',
-    bio: 'Desarrollador Full Stack con más de 6 años de experiencia en el desarrollo de aplicaciones web y móviles. Especializado en React y Node.js, con sólida experiencia en Java y Spring Boot.',
-    bio2: 'He trabajado en productos de alto tráfico, integraciones con APIs externas, pasarelas de pago y entornos ágiles, priorizando calidad, escalabilidad y buenas prácticas. Actualmente trabajo de forma independiente especializándome en AI y automatización.',
-    bio3: 'Basado en Argentina, trabajo con clientes en LATAM y con overlap de horario con Estados Unidos.',
+    bio: 'Empecé programando sistemas empresariales con Java y Angular. Con el tiempo evolucioné hacia el desarrollo full-stack moderno con React y Node.js, construyendo productos de alto tráfico y trabajando con APIs externas y pasarelas de pago.',
+    bio2: 'Hoy diseño y construyo sistemas inteligentes donde la IA trabaja de forma autónoma — desde bots de trading hasta pipelines de análisis y agentes que automatizan procesos complejos.',
+    bio3: 'Trabajo de forma independiente desde Argentina con clientes de LATAM y overlap de horario con Estados Unidos.',
     skillsTitle: 'Stack Técnico',
     categories: {
       web: 'Frontend',
@@ -28,6 +28,11 @@ const es = {
       testing: 'Testing',
       infra: 'Infra & Herramientas',
       aiml: 'AI & ML',
+    },
+    metrics: {
+      years: 'Años de experiencia',
+      projects: 'Proyectos entregados',
+      techs: 'Tecnologías dominadas',
     },
   },
   projects: {
